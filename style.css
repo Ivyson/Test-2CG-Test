@@ -12,5 +12,7 @@ canvas{
     transform: translate(-50%, 30%);
 }
 img{
-    display: none;
+    /* display: none; */
+    height: 0;
+    width: 0;
 }

@@ -53,10 +53,21 @@ webgl.bindBuffer(webgl.ARRAY_BUFFER, texbuff);
 webgl.bufferData(webgl.ARRAY_BUFFER, texCord, webgl.STATIC_DRAW);
 
 //Texture
-
+if(!image)
+{
+    console.log("Error on the image");
+}
+console.log(image);
 let Texturebuffer = webgl.createTexture();
-webgl.bindBuffer(webgl.TEXTURE_2D, Texturebuffer);
+console.log(Texturebuffer);
+webgl.activeTexture(webgl.TEXTURE0);
+webgl.bindTexture(webgl.TEXTURE_2D, Texturebuffer);
 // if()
+webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_S, webgl.CLAMP_TO_EDGE);
+webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_T, webgl.CLAMP_TO_EDGE);
+webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR);
+webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR);
+webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image);
 
 let vsShader = `
 precision highp float;
@@ -66,9 +77,12 @@ uniform mat4 maty;
 uniform mat4 proj;
 uniform mat4 camera;
 uniform mat4 tranlocation;
+attribute vec2 vTexture;
+varying vec2 fTexture;
 // mat4 pos;
 void main()
 {
+    fTexture = vTexture;
     // gl_Position = proj*camera*tranlocation*maty*matx*vec4(vecposition, 1.0);
     gl_Position = maty*matx*vec4(vecposition, 1.0);
     // gl_Position = tranlocation*vec4(vec?position, 1.0);
@@ -77,9 +91,12 @@ void main()
 `;
 
 let fsShader = `
+precision highp float;
+varying vec2 fTexture;
+uniform sampler2D fSampler;
 void main()
 {
-    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    gl_FragColor = texture2D(fSampler, fTexture);
 }
 `;
 
@@ -102,7 +119,14 @@ let Position = webgl.getAttribLocation(program, 'vecposition');
 webgl.bindBuffer(webgl.ARRAY_BUFFER, buffer);
 webgl.enableVertexAttribArray(Position);
 webgl.vertexAttribPointer(Position, 3, webgl.FLOAT, false, 0, 0);
-webgl.drawArrays(webgl.TRIANGLE_STRIP, 0, 4);
+
+
+let tPosition = webgl.getAttribLocation(program, 'vTexture');
+webgl.activeTexture(webgl.TEXTURE0);
+webgl.enableVertexAttribArray(tPosition);
+webgl.vertexAttribPointer(tPosition, 2, webgl.FLOAT, false, 0, 0);
+
+
 let matxloc = webgl.getUniformLocation(program, 'matx');
 let matyloc = webgl.getUniformLocation(program, 'maty');
 let proj = webgl.getUniformLocation(program, 'proj');

@@ -50,12 +50,10 @@ void main()
 let vShader = webgl.createShader(webgl.VERTEX_SHADER);
 webgl.shaderSource(vShader, vsShader);
 webgl.compileShader(vShader);
-// if(!webgl.)
 console.log(webgl.getShaderInfoLog(vShader));
 let fShader = webgl.createShader(webgl.FRAGMENT_SHADER);
 webgl.shaderSource(fShader, fsShader);
 webgl.compileShader(fShader);
-// if(!webgl.)
 console.log(webgl.getShaderInfoLog(vShader));
 
 let program = webgl.createProgram();

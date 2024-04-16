@@ -20,4 +20,4 @@ The provided code serves as a starting point for learning 3D graphics programmin
 
 ## Debugging
 
-If you encounter any issues or errors, you can check the browser console for debugging information. The console logs shader compilation details and projection matrix values for debugging purposes. For any enquiries you can just contact me through my github account @`Iyson` or email at brandonrohrer@telegmail.com
+If you encounter any issues or errors, you can check the browser console for debugging information. The console logs shader compilation details and projection matrix values for debugging purposes. For any enquiries you can just contact me through my github account @`Ivyson` or email at brandonrohrer@telegmail.com

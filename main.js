@@ -1,5 +1,6 @@
 let canvas = document.querySelector('canvas');
 let webgl = canvas.getContext('webgl');
+let image = document.querySelector('img');
 
 webgl.clearColor(1.0, 0.0, 0.0, 1.0);
 webgl.clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
@@ -11,18 +12,52 @@ let vertices = new Float32Array([
     -0.5, 0.5, 0.5,
     -0.5, -0.5, 0.5,
     0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5,
     0.5, -0.5, 0.5,
+    -0.5, -0.5, 0.5,
 
     //Back View
     -0.5, 0.5, -0.5,
     -0.5, -0.5, -0.5,
     0.5, 0.5, -0.5,
+    0.5, 0.5, -0.5,
     0.5, -0.5, -0.5,
+    -0.5, -0.5, -0.5,
+
+    //Top View
+    -0.5, 0.5, 0.5,
+    -0.5, 0.5, -0.5,
+    0.5, 0.5, -0.5,
+    0.5, 0.5, -0.5,
+    0.5, 0.5, 0.5,
+    -0.5, 0.5, 0.5,
+
+    //
 ]);
 
 let buffer = webgl.createBuffer();
 webgl.bindBuffer(webgl.ARRAY_BUFFER, buffer);
 webgl.bufferData(webgl.ARRAY_BUFFER, vertices, webgl.STATIC_DRAW);
+
+let texCord = new Float32Array([
+    0, 1,
+    0, 0,
+    1, 1,
+    1, 1,
+    1, 0, 
+    0, 0,
+]);
+
+let texbuff = webgl.createBuffer();
+webgl.bindBuffer(webgl.ARRAY_BUFFER, texbuff);
+webgl.bufferData(webgl.ARRAY_BUFFER, texCord, webgl.STATIC_DRAW);
+
+//Texture
+
+let Texturebuffer = webgl.createTexture();
+webgl.bindBuffer(webgl.TEXTURE_2D, Texturebuffer);
+// if()
+
 let vsShader = `
 precision highp float;
 attribute vec3 vecposition;
@@ -34,7 +69,8 @@ uniform mat4 tranlocation;
 // mat4 pos;
 void main()
 {
-    gl_Position = proj*camera*tranlocation*maty*matx*vec4(vecposition, 1.0);
+    // gl_Position = proj*camera*tranlocation*maty*matx*vec4(vecposition, 1.0);
+    gl_Position = maty*matx*vec4(vecposition, 1.0);
     // gl_Position = tranlocation*vec4(vec?position, 1.0);
     gl_PointSize = 5.0;
 }
@@ -63,6 +99,7 @@ webgl.linkProgram(program);
 webgl.useProgram(program);
 
 let Position = webgl.getAttribLocation(program, 'vecposition');
+webgl.bindBuffer(webgl.ARRAY_BUFFER, buffer);
 webgl.enableVertexAttribArray(Position);
 webgl.vertexAttribPointer(Position, 3, webgl.FLOAT, false, 0, 0);
 webgl.drawArrays(webgl.TRIANGLE_STRIP, 0, 4);
@@ -159,8 +196,8 @@ let x,y,z;
     let matX = rotateX(angle);
     let matY = rotateY(angle);
     let trans = translate(x, y, z);
-    let projec = Projection(Math.PI / 4, 0.1, 100);
-    let cam = Camera([1, 10, 0], [0, 0, 0], [0, 1, 0]);
+    let projec = Projection(Math.PI / 4, 4, 110);
+    let cam = Camera([8, 0, 0], [1, 1, 1], [1, 1, 1]);
 
     webgl.uniformMatrix4fv(matxloc, false, matX);
     webgl.uniformMatrix4fv(matyloc, false, matY);
@@ -168,8 +205,9 @@ let x,y,z;
     webgl.uniformMatrix4fv(tranlocation, false, trans);
     webgl.uniformMatrix4fv(proj, false, projec);
 
-    webgl.drawArrays(webgl.TRIANGLE_STRIP, 0, 4);
-    webgl.drawArrays(webgl.TRIANGLE_STRIP, 4, 4);
+    webgl.drawArrays(webgl.TRIANGLES, 0, 6);
+    webgl.drawArrays(webgl.TRIANGLES, 6, 6);
+    webgl.drawArrays(webgl.TRIANGLES, 12, 6);
 
     angle += 0.01;
     requestAnimationFrame(draw);

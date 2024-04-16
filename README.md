@@ -1,6 +1,6 @@
 # WebGL Cube Rotation
 
-This repository contains a WebGL implementation for rendering a rotating cube. The code demonstrates key concepts in WebGL programming, including shader compilation, matrix transformations, and animation techniques.
+This repository contains a WebGL implementation for rendering a rotating cube like polygon, or an incomplete cube that has two sides. The code demonstrates key concepts in WebGL programming, including shader compilation, matrix transformations, and animation techniques.
 
 ## Getting Started
 
